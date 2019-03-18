@@ -1,0 +1,23 @@
+{
+  "name": "mini-js-loader",
+  "version": "1.0.0",
+  "description": "小程序wxs loader",
+  "main": "src/cjs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bugszhou/mini-js-loader.git"
+  },
+  "author": "bugszhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bugszhou/mini-js-loader/issues"
+  },
+  "homepage": "https://github.com/bugszhou/mini-js-loader#readme",
+  "dependencies": {
+    "loader-utils": "^1.2.3",
+    "uglify-js": "^3.4.10"
+  }
+}
