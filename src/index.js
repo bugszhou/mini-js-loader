@@ -1,10 +1,12 @@
 'use strict';
+const esprima = require('esprima'),
+  estraverse = require('estraverse'),
+  escodegen = require('escodegen');
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 const path = require("path"),
-  UglifyJS = require('uglify-js'),
   loaderUtils = require("loader-utils");
 
 function miniJsLoader(source) {
@@ -36,7 +38,7 @@ function miniJsLoader(source) {
   }
 
   if (typeof options.emitFile === 'undefined' || options.emitFile) {
-    this.emitFile(outputPath, options.minimize ? setJSMinify(source) : source);
+    this.emitFile(outputPath, setJSMinify(source));
   }
   return getRequire(this.resourcePath, importArr);
 };
@@ -70,18 +72,24 @@ function getRequireDir(resourcePath) {
  * 压缩js
  */
 function setJSMinify(content = '') {
-  let result = UglifyJS.minify(content, {
-    mangle: {
-      toplevel: true,
-    },
-    output: {
-      beautify: false,
-    },
+  const ast = esprima.parseScript(content);
+  estraverse.traverse(ast, {
+    enter: (node) => {
+      if (node.type === 'UnaryExpression' && node.operator === 'void') {
+        node.type = 'CallExpression';
+        node.callee = {
+          type: 'Identifier',
+          name: 'void',
+        };
+        node.arguments = [{ type: 'Literal', value: 0 }];
+        node.prefix = true;
+      }
+    }
   });
-  if (result.error) {
-    return content;
-  }
-  return result.code;
+  const transformCode = escodegen.generate(ast, {
+    format: escodegen.FORMAT_MINIFY
+  });
+  return transformCode;
 }
 
 exports.default = miniJsLoader;

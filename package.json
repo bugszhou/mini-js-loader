@@ -1,6 +1,6 @@
 {
   "name": "mini-js-loader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "小程序wxs loader",
   "main": "src/cjs.js",
   "scripts": {
@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/bugszhou/mini-js-loader#readme",
   "dependencies": {
-    "loader-utils": "^1.2.3",
-    "uglify-js": "^3.4.10"
+    "escodegen": "^1.11.1",
+    "esprima": "^4.0.1",
+    "estraverse": "^4.2.0",
+    "loader-utils": "^1.2.3"
   }
 }
