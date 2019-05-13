@@ -87,7 +87,10 @@ function setJSMinify(content = '') {
     }
   });
   const transformCode = escodegen.generate(ast, {
-    format: escodegen.FORMAT_MINIFY
+    format: {
+      ...escodegen.FORMAT_MINIFY,
+      semicolons: true,
+    }
   });
   return transformCode;
 }
