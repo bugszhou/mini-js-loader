@@ -37,8 +37,12 @@ function miniJsLoader(source) {
     }
   }
 
+  if (typeof options.undefinedToVoid !== 'boolean') {
+    options.undefinedToVoid = true;
+  }
+
   if (typeof options.emitFile === 'undefined' || options.emitFile) {
-    this.emitFile(outputPath, setJSMinify(source));
+    this.emitFile(outputPath, setJSMinify(source, options.undefinedToVoid));
   }
   return getRequire(this.resourcePath, importArr);
 };
