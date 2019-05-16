@@ -71,7 +71,10 @@ function getRequireDir(resourcePath) {
 /**
  * 压缩js
  */
-function setJSMinify(content = '') {
+function setJSMinify(content = '', undefinedToVoid) {
+  if (!undefinedToVoid) {
+    return content;
+  }
   const ast = esprima.parseScript(content);
   estraverse.traverse(ast, {
     enter: (node) => {
