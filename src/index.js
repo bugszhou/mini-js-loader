@@ -106,7 +106,6 @@ function setJSMinify(content = '', undefinedToVoid) {
  * unicode转中文
  */
 function unicode2Char(source = "") {
-  console.log(/\\[u]/gi.test(source))
   const ast = esprima.parseScript(source);
   estraverse.traverse(ast, {
     enter: (node) => {
