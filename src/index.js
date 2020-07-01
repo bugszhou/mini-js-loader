@@ -42,7 +42,7 @@ function miniJsLoader(source) {
   }
 
   if (typeof options.emitFile === 'undefined' || options.emitFile) {
-    this.emitFile(outputPath, setJSMinify(source, options.undefinedToVoid));
+    this.emitFile(outputPath, unicode2Char(setJSMinify(source, options.undefinedToVoid)));
   }
   return getRequire(this.resourcePath, importArr);
 };
@@ -90,6 +90,30 @@ function setJSMinify(content = '', undefinedToVoid) {
         };
         node.arguments = [{ type: 'Literal', value: 0 }];
         node.prefix = true;
+      }
+    }
+  });
+  const transformCode = escodegen.generate(ast, {
+    format: {
+      ...escodegen.FORMAT_MINIFY,
+      semicolons: true,
+    }
+  });
+  return transformCode;
+}
+
+/**
+ * unicode转中文
+ */
+function unicode2Char(source = "") {
+  console.log(/\\[u]/gi.test(source))
+  const ast = esprima.parseScript(source);
+  estraverse.traverse(ast, {
+    enter: (node) => {
+      if (node.type === "Literal") {
+        if (node.raw && /\\[u]/gi.test(node.raw)) {
+          node.raw = node.value;
+        }
       }
     }
   });
