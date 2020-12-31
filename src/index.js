@@ -151,9 +151,19 @@ function getNodeModulesSource(resourcePath) {
       throw e;
     }
   }
-  if (!jsonData.miniprogram || !jsonData.files) {
+  if (!jsonData.miniprogram && !jsonData.files) {
     return resourcePath;
   }
+  let libNames = [];
+  if (Array.isArray(jsonData.files)) {
+    libName = [...jsonData.files, jsonData.miniprogram || ""];
+  } else {
+    libName = [jsonData.files, jsonData.miniprogram || ""];
+  }
+
+  // if (libName.includes(urls[ind])) {
+  //   return path.resolve(nodeModulesPath, urls.join("/"));
+  // }
   urls.splice(ind, 1, "");
   return path.resolve(nodeModulesPath, urls.join("/"));
 }
