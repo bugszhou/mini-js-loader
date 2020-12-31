@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 const path = require("path"),
+  fs = require("fs"),
   loaderUtils = require("loader-utils");
 
 function miniJsLoader(source) {
@@ -65,7 +66,11 @@ function getRequire(resourcePath, importArr = []) {
 }
 
 function getRequireDir(resourcePath) {
-  const fileDir = path.dirname(resourcePath),
+  let tmpPath = resourcePath;
+  if (tmpPath.includes("node_modules")) {
+    tmpPath = getNodeModulesSource(resourcePath);
+  }
+  const fileDir = path.dirname(tmpPath),
     srcName = path.relative(process.cwd(), fileDir).split(path.sep)[0] || 'src',
     srcDir = path.resolve(process.cwd(), srcName);
 
@@ -123,6 +128,34 @@ function unicode2Char(source = "") {
     }
   });
   return transformCode;
+}
+
+function getNodeModulesSource(resourcePath) {
+  const nodeModulesPath = path.resolve(process.cwd(), "node_modules");
+  const moduleRelativePath = path.relative(nodeModulesPath, resourcePath);
+  const urls = moduleRelativePath.split("/");
+  let jsonData = {};
+  let ind = 1;
+  if (fs.existsSync(path.resolve(nodeModulesPath, urls[0], "package.json"))) {
+    try {
+      jsonData = JSON.parse(fs.readFileSync(path.resolve(nodeModulesPath, urls[0], "package.json")).toString());
+      ind = 1;
+    } catch (e) {
+      throw e;
+    }
+  } else {
+    try {
+      jsonData = JSON.parse(fs.readFileSync(path.resolve(nodeModulesPath, urls[0], urls[1], "package.json")).toString());
+      ind = 2;
+    } catch (e) {
+      throw e;
+    }
+  }
+  if (!jsonData.miniprogram || !jsonData.files) {
+    return resourcePath;
+  }
+  urls.splice(ind, 1, "");
+  return path.resolve(nodeModulesPath, urls.join("/"));
 }
 
 exports.default = miniJsLoader;
