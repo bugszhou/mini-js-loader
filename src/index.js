@@ -20,6 +20,10 @@ function miniJsLoader(source) {
 
   const options = loaderUtils.getOptions(this) || {};
 
+  if (options.filename && /\.sjs$/.test(options.filename)) {
+    importArr = [...importArr, ...getModulesPath(source)];
+  }
+
   const context = options.context || this.rootContext;
 
   const url = loaderUtils.interpolateName(this, path.join(getRequireDir(this.resourcePath), options.filename), {
@@ -75,6 +79,19 @@ function getRequireDir(resourcePath) {
     srcDir = path.resolve(process.cwd(), srcName);
 
   return path.relative(srcDir, fileDir);
+}
+
+function getModulesPath(source = "") {
+  const ast = esprima.parseModule(source);
+  const importPath = []
+  estraverse.traverse(ast, {
+    enter: (node) => {
+      if (node.type === 'ImportDeclaration') {
+        importPath.push(node.source.value);
+      }
+    }
+  });
+  return importPath;
 }
 
 /**
