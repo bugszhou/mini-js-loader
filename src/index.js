@@ -43,7 +43,7 @@ function miniJsLoader(source) {
   }
 
   if (typeof options.emitFile === 'undefined' || options.emitFile) {
-    this.emitFile(outputPath, unicode2Char(setJSMinify(source, options.undefinedToVoid)));
+    this.emitFile(outputPath, unicode2Char(setJSMinify(source, options.undefinedToVoid), options.isUnicode2Char));
   }
   return getRequire(this.resourcePath, importArr);
 };
@@ -110,7 +110,10 @@ function setJSMinify(content = '', undefinedToVoid) {
 /**
  * unicode转中文
  */
-function unicode2Char(source = "") {
+function unicode2Char(source = "", isUnicode2Char) {
+  if (isUnicode2Char === false) {
+    return source;
+  }
   const ast = esprima.parseScript(source);
   estraverse.traverse(ast, {
     enter: (node) => {
