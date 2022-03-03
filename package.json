@@ -1,6 +1,6 @@
 {
   "name": "mini-js-loader",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "小程序wxs loader",
   "main": "src/cjs.js",
   "scripts": {
