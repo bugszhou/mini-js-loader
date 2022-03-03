@@ -1,7 +1,8 @@
 'use strict';
 const esprima = require('esprima'),
   estraverse = require('estraverse'),
-  escodegen = require('escodegen');
+  escodegen = require('escodegen'),
+  normalize = require("normalize-path");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -152,7 +153,7 @@ function unicode2Char(source = "", isUnicode2Char) {
 
 function getNodeModulesSource(resourcePath) {
   const nodeModulesPath = path.resolve(process.cwd(), "node_modules");
-  const moduleRelativePath = path.relative(nodeModulesPath, resourcePath);
+  const moduleRelativePath = normalize(path.relative(nodeModulesPath, resourcePath));
   const urls = moduleRelativePath.split("/");
   let jsonData = {};
   let ind = 1;

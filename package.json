@@ -20,6 +20,7 @@
     "escodegen": "^1.11.1",
     "esprima": "^4.0.1",
     "estraverse": "^4.2.0",
-    "loader-utils": "^1.2.3"
+    "loader-utils": "^1.2.3",
+    "normalize-path": "^3.0.0"
   }
 }
