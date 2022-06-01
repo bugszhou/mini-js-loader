@@ -102,7 +102,22 @@ function setJSMinify(content = '', undefinedToVoid) {
   if (!undefinedToVoid) {
     return content;
   }
-  const ast = esprima.parseScript(content);
+
+  let ast = null;
+
+  try {
+    ast = esprima.parseScript(content);
+  } catch (e) {
+    console.log(e);
+  }
+
+  if (!ast) {
+    try {
+      ast = esprima.parseModule(content);
+    } catch (e) {
+      return content;
+    }
+  }
   estraverse.traverse(ast, {
     enter: (node) => {
       if (node.type === 'UnaryExpression' && node.operator === 'void') {
@@ -132,7 +147,22 @@ function unicode2Char(source = "", isUnicode2Char) {
   if (isUnicode2Char === false) {
     return source;
   }
-  const ast = esprima.parseScript(source);
+
+  let ast = null;
+
+  try {
+    ast = esprima.parseScript(source);
+  } catch (e) {
+    console.log(e);
+  }
+
+  if (!ast) {
+    try {
+      ast = esprima.parseModule(source);
+    } catch (e) {
+      return source;
+    }
+  }
   estraverse.traverse(ast, {
     enter: (node) => {
       if (node.type === "Literal") {
