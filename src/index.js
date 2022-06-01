@@ -152,7 +152,6 @@ function unicode2Char(source = "", isUnicode2Char) {
   try {
     ast = esprima.parseScript(source);
   } catch (e) {
-    console.log(e);
   }
 
   if (!ast) {
