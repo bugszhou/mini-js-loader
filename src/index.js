@@ -108,7 +108,6 @@ function setJSMinify(content = '', undefinedToVoid) {
   try {
     ast = esprima.parseScript(content);
   } catch (e) {
-    console.log(e);
   }
 
   if (!ast) {
